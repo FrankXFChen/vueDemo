@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vue Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+</head>
+<body>
+    <div id="firstVue" v-bind:style="bColor" >
+      <div>
+        <h1>This is a Todo List</h1>
+      </div>
+      <div>
+        <p>Add item</p> 
+        <div style="margin-top:-2%">
+          <input type='text' v-model="newItem">
+          <button v-on:click="addItem">Add</button>
+        </div>
+      </div>
+      <div>
+        <ul id="listContainer"> 
+        <li-item v-for="item in listBox" v-bind:name="item.content" v-bind:id="item.id" v-bind:flag="item.flag" v-bind:ui="item.ui"></li-item>
+        </ul>
+      </div>
+    </div>
+    <div>
+        <div style="display:inline-block; border:solid 2px red">
+            <p><strong>
+                <ul>
+                    <li>eqwr qwrer q wre</li>
+                    <li>qwr qwr qw qwr</li>
+                    <li>rwer qwrqw qwr rqwrqw</li>
+                </ul>
+            </strong></p>
+        </div>
+        <div style="display:inline-block" ><p><strong>:</strong></p></div>
+        <div style="display:inline-block; border:solid 2px red; vertical-align: top;" >
+            <p><strong>
+                <ul>
+                    <li>werwe ewr try  eryrtyy rtyr rtyrt y</li>
+                    <li>qwr qwr qw qwr</li>
+                    <li>rwer qwrqw qwr rqwrqw</li>
+                    <li>werwe ewr try  eryrtyy rtyr rtyrt y</li>
+                    <li>werwe ewr try  aa dsff s dfsdf  sdfsdfs fsdf s rtyr rtyrt y</li>
+                </ul>
+            </strong></p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    Vue.component('button-demo',{
+      template:'<div><button>Add One</button></div>'
+    })
+    
+    Vue.component('li-item',{
+        props:['name','flag','ui'],
+        template:'<li><div v-bind:style="ui">{{name}}</div>'+
+            '<div v-show="flag" style="width:20%;display:inline;padding:5px"><button v-on:click="doneEvent" class="doneButton">Done</button></div>'+
+            '<div v-show="flag" style="width:20%;display:inline;padding:5px"><button v-on:click="cancelEvent" class="cancelButton">Cancel</button></div>'+
+            '<div v-show="flag" style="width:20%;display:inline;padding:5px"><button v-on:click="removeEvent" class="removeButton">Remove</button></div>'+
+            '</li>',
+        methods: {
+            doneEvent: function(){
+                var id = Number(this.$el.id);
+                var _listBox = this.$parent.listBox;
+                var objSelected;
+                for(var obj of _listBox){
+                    if(obj.id==id){
+                        objSelected = obj; 
+                    }
+                }
+                var indexSelected = _listBox.indexOf(objSelected);
+                var _that = this.$parent.listBox[indexSelected];
+                _that.content = _that.content+' is done!';
+                _that.flag = false;
+                _that.ui = 'width:40%;color:#04bf04';
+            },
+            cancelEvent: function(){
+                var id = Number(this.$el.id);
+                var _listBox = this.$parent.listBox;
+                var objSelected;
+                for(var obj of _listBox){
+                    if(obj.id==id){
+                        objSelected = obj; 
+                    }
+                }
+                var indexSelected = _listBox.indexOf(objSelected);
+                var _that = this.$parent.listBox[indexSelected];
+                _that.content= _that.content+' is canceled!';
+                _that.flag= false;
+                _that.ui = 'width:40%;color:red';
+            },
+            removeEvent: function(){
+                var id = Number(this.$el.id);
+                var _listBox = this.$parent.listBox;
+                var objSelected;
+                for(var obj of _listBox){
+                    if(obj.id==id){
+                        objSelected = obj; 
+                    }
+                }
+                var indexSelected = _listBox.indexOf(objSelected);
+                _listBox.splice(indexSelected,1);
+            },
+            // getIndex: function(){
+            //     var _listBox = this.$parent.listBox;
+            //     var objSelected;
+            //     for(var obj of _listBox){
+            //         if(obj.id==index){
+            //             objSelected = obj; 
+            //         }
+            //     }
+            //     var indexSelected = _listBox.indexOf(objSelected);
+            // }
+        }
+    })
+
+    var counter = 1;
+    var myVue = new Vue({
+        el: "#firstVue",
+        data: {
+          msg:'this is test',
+          listBox: [
+            // {
+            //   content:'take breakfast',
+            //   flag:true,
+            //   ui:'width:40%'
+            // },
+            // {
+            //   content:'take lunch',
+            //   flag:true,
+            //   ui:'width:40%'
+            // },
+            // {
+            //   content:'take dinner',
+            //   flag:true,
+            //   ui:'width:40%'
+            // }
+          ],
+          bColor: 'color:#FF9800; margin-left:40%',
+          textClick:'Click it',
+          newItem:'',
+        },
+        methods: {
+          addItem:function() {
+            var newOne = {
+                  content: this.newItem,
+                  flag: true,
+                  ui: 'width:40%',
+                  id: counter++,
+              }
+            this.listBox.push(newOne);
+            this.newItem = '';
+          }
+        }
+    })
+</script>
+</html>
